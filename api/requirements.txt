@@ -1,0 +1,22 @@
+# --- Core ---
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+gunicorn==21.2.0
+python-dotenv==1.0.1
+
+# --- Data & ML ---
+pandas==2.2.3
+numpy==1.26.4
+scikit-learn==1.5.1
+xgboost==2.1.1
+mlflow==2.15.1
+joblib==1.4.2
+
+# --- Snowflake & DBT integration ---
+snowflake-connector-python==3.12.0
+snowflake-sqlalchemy==1.5.3
+SQLAlchemy==1.4.52
+
+# --- Utilities ---
+requests==2.32.3
+loguru==0.7.2

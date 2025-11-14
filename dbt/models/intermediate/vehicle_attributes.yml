@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: vehicle_attributes
+    description: "Intermediate model that enriches listings with derived metrics and data quality checks."
+    columns:
+      - name: id
+        description: "Unique identifier for each vehicle listing."
+        tests:
+          - not_null
+          - unique
+
+      - name: manufacturer
+        description: "Manufacturer of the vehicle (e.g., Toyota, Ford, Honda)."
+
+      - name: model
+        description: "Model of the vehicle (e.g., Corolla, F-150)."
+
+      - name: year
+        description: "Manufacture year of the vehicle."
+        tests:
+          - not_null
+
+      - name: odometer
+        description: "Mileage of the vehicle in miles."
+
+      - name: price
+        description: "Listed sale price of the vehicle in USD."
+        tests:
+          - not_null
+
+      - name: price_per_mile
+        description: "Derived metric: price divided by odometer reading."
+
+      - name: vehicle_age
+        description: "Derived metric: current year minus manufacture year."
+
+      - name: data_quality_flag
+        description: "Flag identifying potential data issues (price or odometer outliers)."
