@@ -39,20 +39,8 @@ used_vehicle_analytics/
 ├── api/
 │   ├── main.py
 │   ├── requirements.txt
-│   ├── routers/
-│   │   └── vehicles.py
-│   ├── services/
-│   │   └── snowflake_service.py
-│   └── schemas/
-│       └── vehicle_schema.py
-│
+|
 ├── frontend/
-│   ├── package.json
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   └── App.js
-│   └── public/
 │
 ├── dbt_pipeline/
 │   ├── dbt_project.yml
@@ -70,10 +58,8 @@ used_vehicle_analytics/
 │   │
 │   ├── models/
 │   │   └── xgboost_model.pkl            # trained/saved model
+|   |   └── eval.pkl                     # saved model data
 │   │
-│   ├── artifacts/
-│   │   ├── feature_pipeline.pkl         # encoder/scaler pipeline
-│   │   └── metrics.json                 # RMSE, MAE, R²
 │   │
 │   ├── src/
 │   │   ├── __init__.py
@@ -83,7 +69,6 @@ used_vehicle_analytics/
 │   │   ├── predict.py                   # load model + predict new inputs
 │   │   ├── evaluate.py                  # compute metrics, plot results
 │   │   ├── plot.py                       # optional: visualize top features
-│   │   └── utils.py                     # helper funcs (logging, data loading)
 │   │
 │   ├── requirements.txt                 # sklearn, xgboost, mlflow, etc.
 │   └── README.md                        # short doc for how to run ML scripts
