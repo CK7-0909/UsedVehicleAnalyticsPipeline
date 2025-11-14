@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: fact_vehicles
+    description: "Vehicle listings fact table with measures and keys to vehicle and location dimensions."
+    columns:
+      - name: fact_vehicle_id
+        description: "Surrogate primary key for the fact table."
+        tests:
+          - not_null
+          - unique
+
+      - name: dim_vehicle_id
+        description: "Foreign key to dim_vehicle."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_vehicle')
+              field: vehicle_id
+
+      - name: dim_location_id
+        description: "Foreign key to dim_location."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_location')
+              field: location_id
+
+      - name: price
+        description: "Listing price captured for the vehicle."
+        tests:
+          - not_null
+
+      - name: odometer
+        description: "Odometer reading at the time of listing."
+
+      - name: title_status
+        description: "Title status provided in the listing (e.g., clean, rebuilt)."
+
+      - name: paint_color
+        description: "Exterior paint color provided in the listing."

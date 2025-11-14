@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: fastapi_service
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - .:/app
+    depends_on:
+      - dbt
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: ../Dockerfile.web
+    container_name: react_frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - api
+
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-snowflake:latest
+    container_name: dbt
+    working_dir: /usr/app
+    volumes:
+      - ./dbt:/usr/app
+      - ./profiles.yml:/root/.dbt/profiles.yml
+    env_file: .env

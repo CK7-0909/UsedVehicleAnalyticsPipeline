@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: dim_vehicle
+    description: "Vehicle dimension keyed by manufacturer, model, and year."
+    meta:
+      folder: "mart/dims"
+      owner: "analytics"
+      business_term: "Vehicle"
+    tags: ["dims", "vehicle"]
+    columns:
+      - name: vehicle_id
+        description: "Surrogate primary key generated from manufacturer, model, and year."
+        tests:
+          - not_null
+          - unique
+      - name: manufacturer
+        description: "Canonical manufacturer name used for matching to staging data."
+      - name: model
+        description: "Vehicle model name as represented in listings."
+      - name: year
+        description: "Model year captured from the listings data."
+      - name: condition
+        description: "Most commonly observed vehicle condition for this make/model/year."
+      - name: cylinders
+        description: "Most commonly observed cylinder configuration."
+      - name: fuel
+        description: "Most commonly observed fuel type."
+      - name: drive
+        description: "Most commonly observed drivetrain."
+      - name: size
+        description: "Most commonly observed vehicle size classification."
+      - name: type
+        description: "Most commonly observed vehicle type classification."
+      - name: transmission
+        description: "Most commonly observed transmission type."
+
+  - name: dim_location
+    description: "Geographic dimension for mapping vehicles to state and region."
+    meta:
+      folder: "mart/dims"
+      owner: "analytics"
+      business_term: "Location"
+    tags: ["dims", "location"]
+    columns:
+      - name: location_id
+        description: "Surrogate primary key for the location dimension."
+        tests:
+          - not_null
+          - unique
+      - name: state
+        description: "State derived from the staged listings."
+        tests:
+          - not_null
+      - name: region
+        description: "Region derived from the staged listings."

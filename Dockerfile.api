@@ -1,0 +1,17 @@
+# --- Production Dockerfile for FastAPI ---
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY api/requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt gunicorn
+
+# Copy project files
+COPY . /app
+
+# Expose API port
+EXPOSE 8000
+
+# Run via Gunicorn + Uvicorn worker for better concurrency
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "api.main:app", "--bind", "0.0.0.0:8000"]
