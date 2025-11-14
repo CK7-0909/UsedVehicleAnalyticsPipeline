@@ -13,7 +13,10 @@ def predict(prediction_df: pd.DataFrame, model_path: str = "ml/models/xgb_model_
     feature_names = getattr(model, "feature_names_in_", None)
     if feature_names is None:
         feature_names = model.get_booster().feature_names or []
-    expected_columns = list(feature_names) if feature_names else None
+    if feature_names is None:
+        expected_columns = None
+    else:
+        expected_columns = list(feature_names)
     feature_frame = fit_transform(
         df,
         drop_first=True,
