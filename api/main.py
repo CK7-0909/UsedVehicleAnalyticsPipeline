@@ -6,40 +6,25 @@ from pathlib import Path
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from ml.data.snowflake.sf_connection import query_to_df
-from ml.src.predict import predict
+from api.routes.predict import router as predict_router
+from api.routes.evaluation import router as eval_router
 
 app = FastAPI(title="Used Vehicle Analytics API")
-MODEL_PATH = Path("ml/models/xgb_model_all.joblib")
-class VehicleInput(BaseModel):
-    """Payload expected by the prediction endpoint."""
 
-    manufacturer: str = Field(..., description="Vehicle manufacturer, e.g. Toyota")
-    model: str = Field(..., description="Vehicle model, e.g. Camry")
-    year: int = Field(..., ge=1980, le=2100, description="Vehicle model year")
-    odometer: int = Field(..., ge=0, description="Odometer reading in miles")
-    title_status: str = Field(..., description="Listing title status")
-    transmission: str = Field(..., description="Transmission type")
-    paint_color: str = Field(..., description="Primary exterior color")
-    state: str = Field(..., description="Two-letter state abbreviation")
-
-    def to_frame(self) -> pd.DataFrame:
-        return pd.DataFrame([self.model_dump()])
-
-
-@lru_cache(maxsize=1)
-def _validated_model_path() -> str:
-    """Ensure the configured model path exists before attempting predictions."""
-
-    if not MODEL_PATH.exists():
-        raise FileNotFoundError(
-            f"Trained model not found at '{MODEL_PATH}'. "
-            "Run the training pipeline or update MODEL_PATH."
-        )
-    return str(MODEL_PATH)
-
+# Allow the React dev server to call the API locally.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3200",
+    ],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # --- Health check ---
 @app.get("/health")
@@ -55,16 +40,8 @@ def get_vehicle_count():
     return {"total_vehicles": count}
 
 
-# --- ML prediction endpoint ---
-@app.post("/predict")
-def predict_price(data: VehicleInput):
-    try:
-        df = data.to_frame()
-        predictions = predict(df, model_path=_validated_model_path())
-    except FileNotFoundError as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
+FILE_PATH = Path("ml_artifacts/evaluation_results.parquet")
+MODEL_PATH = Path("ml/models/xgb_model_all.joblib")
 
-    price = float(predictions[0]) if len(predictions) else float("nan")
-    return {"predicted_price": round(price, 2)}
+app.include_router(predict_router)
+app.include_router(eval_router)
