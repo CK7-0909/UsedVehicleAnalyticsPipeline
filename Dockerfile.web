@@ -2,12 +2,12 @@
 FROM node:18 as build
 
 WORKDIR /app
-COPY ./frontend/package*.json ./
-RUN npm install
-COPY ./frontend /app
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
+COPY . /app
 RUN npm run build
 
-# Stage 2 — serve with Nginx
+# Stage 2 - serve with Nginx
 FROM nginx:stable-alpine
 COPY --from=build /app/build /usr/share/nginx/html
 

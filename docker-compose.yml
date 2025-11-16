@@ -18,7 +18,7 @@ services:
       dockerfile: ../Dockerfile.web
     container_name: react_frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
     volumes:
       - ./frontend:/app
     environment:
@@ -30,6 +30,7 @@ services:
     image: ghcr.io/dbt-labs/dbt-snowflake:latest
     container_name: dbt
     working_dir: /usr/app
+    entrypoint: ["/bin/sh", "-c", "tail -f /dev/null"]  # override dbt entrypoint so the container idles
     volumes:
       - ./dbt:/usr/app
       - ./profiles.yml:/root/.dbt/profiles.yml
