@@ -16,7 +16,7 @@ class VehicleInput(BaseModel):
 
     manufacturer: str = Field(..., description="Vehicle manufacturer, e.g. Toyota")
     model: str = Field(..., description="Vehicle model, e.g. Camry")
-    year: int = Field(..., ge=1980, le=2100, description="Vehicle model year")
+    year: int = Field(..., ge=2000, le=2100, description="Vehicle model year")
     odometer: int = Field(..., ge=0, description="Odometer reading in miles")
     title_status: str = Field(..., description="Listing title status")
     transmission: str = Field(..., description="Transmission type")
@@ -31,7 +31,7 @@ class VehicleInput(BaseModel):
 def predict_price(data: VehicleInput, model_path: Path = Path("ml/models/xgb_model_all.joblib")):
     try:
         df = data.to_frame()
-        predictions = predict(df, model_path())
+        predictions = predict(df, str(model_path))
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     except Exception as exc:

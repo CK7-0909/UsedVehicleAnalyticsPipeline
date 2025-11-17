@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 from ml.data.snowflake.sf_connection import query_to_df
 from api.routes.predict import router as predict_router
 from api.routes.evaluation import router as eval_router
+from api.routes.options import router as options_router
 
 app = FastAPI(title="Used Vehicle Analytics API")
 
@@ -45,3 +46,4 @@ MODEL_PATH = Path("ml/models/xgb_model_all.joblib")
 
 app.include_router(predict_router)
 app.include_router(eval_router)
+app.include_router(options_router)

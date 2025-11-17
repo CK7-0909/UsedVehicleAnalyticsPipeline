@@ -17,6 +17,7 @@ import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import LandingPageHeader from "components/Headers/LandingPageHeader.js";
 import DefaultFooter from "components/Footers/DefaultFooter.js";
 import ActualVsPredictedChart from "components/Charts/ActualVsPredictedChart";
+import PriceForm from "components/Forms/PriceForm";
 
 function LandingPage() {
   const [firstFocus, setFirstFocus] = React.useState(false);
@@ -57,9 +58,13 @@ Explore market trends, compare pricing patterns, and predict a car’s value ins
           <h2 className="title text-center">Actual vs Predicted Prices</h2>
           <ActualVsPredictedChart />
         </Container>
+        <Container>
+          ----- Prediction Metrics -----
+          <PriceForm />
+        </Container>
         <div className="section section-contact-us text-center">
           <Container>
-            <h2 className="title">Want to work with us?</h2>
+            <h2 className="title">Contact us</h2>
             <p className="description">Your project is very important to us.</p>
             <Row>
               <Col className="text-center ml-auto mr-auto" lg="6" md="8">
