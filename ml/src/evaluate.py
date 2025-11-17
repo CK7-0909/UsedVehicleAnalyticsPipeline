@@ -9,8 +9,6 @@ import pandas as pd
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 NumberArray = Union[Iterable[float], np.ndarray, pd.Series]
-
-
 @dataclass(frozen=True)
 class RegressionMetrics:
     """Simple container for the key regression metrics we care about."""
@@ -44,21 +42,21 @@ def evaluate_model(
         return_details: When True also return the per-record evaluation DataFrame.
     """
 
-    y_true_arr = _to_numpy(y_true)
-    y_pred_arr = _to_numpy(y_pred)
+    y_true = _to_numpy(y_true)
+    y_pred = _to_numpy(y_pred)
 
     metrics = RegressionMetrics(
-        mae=float(mean_absolute_error(y_true_arr, y_pred_arr)),
-        rmse=float(np.sqrt(mean_squared_error(y_true_arr, y_pred_arr))),
-        r2=float(r2_score(y_true_arr, y_pred_arr)),
+        mae=float(mean_absolute_error(y_true, y_pred)),
+        rmse=float(np.sqrt(mean_squared_error(y_true, y_pred))),
+        r2=float(r2_score(y_true, y_pred)),
     )
 
-    abs_error = np.abs(y_true_arr - y_pred_arr)
-    pct_error = np.where(y_true_arr != 0, abs_error / y_true_arr * 100, np.nan)
+    abs_error = np.abs(y_true - y_pred)
+    pct_error = np.where(y_true != 0, abs_error / y_true * 100, np.nan)
     eval_df = pd.DataFrame(
         {
-            "actual_price": y_true_arr,
-            "predicted_price": y_pred_arr,
+            "actual_price": y_true,
+            "predicted_price": y_pred,
             "abs_error": abs_error,
             "pct_error": pct_error,
         }
