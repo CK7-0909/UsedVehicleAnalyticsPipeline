@@ -216,7 +216,11 @@ def fit_transform(
 ) -> pd.DataFrame:
     df = _standardize_categoricals(df)
     feature_cols = ["age", "odometer"] + CATEGORICAL_COLUMNS
-    feature_frame = pd.get_dummies(df[feature_cols], drop_first=drop_first)
+    # When scoring (expected_columns provided), keep all dummy columns so that
+    # a single-row payload still produces the category-specific features before
+    # we align to the trained feature set.
+    effective_drop = drop_first if expected_columns is None else False
+    feature_frame = pd.get_dummies(df[feature_cols], drop_first=effective_drop)
     if expected_columns is not None:
         feature_frame = feature_frame.reindex(columns=expected_columns, fill_value=0)
     return feature_frame
