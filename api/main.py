@@ -1,11 +1,15 @@
 from __future__ import annotations
+#Rag
+from pydantic import BaseModel
+from NL_to_SQL.filter_parser import parse_filters
+from NL_to_SQL.query_engine import run_query
 
 import os
 from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException  # type: ignore[import]
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -47,3 +51,17 @@ MODEL_PATH = Path("ml/models/xgb_model_all.joblib")
 app.include_router(predict_router)
 app.include_router(eval_router)
 app.include_router(options_router)
+
+ 
+class Question(BaseModel):
+    question: str
+
+@app.post("/vehicles/ask")
+def vehicles_ask(q: Question):
+    filters = parse_filters(q.question)
+    results = run_query(filters)
+    return {
+        "filters_used": filters,
+        "count": len(results),
+        "results": results.head(20).to_dict(orient="records"),
+    }

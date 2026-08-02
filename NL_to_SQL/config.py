@@ -1,0 +1,6 @@
+DATA_PATH = "ml/data/80K_Rows.csv" 
+PRICE_COL = "price"
+YEAR_COL = "year"
+BODY_TYPE_COL = "type"
+MODEL_COL = "model"
+SIMILARITY_COLS = ["price","odometer", "year"]  # numeric cols for "similar to X"
