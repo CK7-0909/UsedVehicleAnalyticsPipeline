@@ -4,10 +4,13 @@ from __future__ import annotations
 from pathlib import Path
 
 import pandas as pd
-from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi import HTTPException, APIRouter
 from pydantic import BaseModel, Field
 import numpy as np
 from ml.src.predict import predict
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+MODEL_PATH = ROOT_DIR / "ml" / "models" / "xgb_model_all.joblib"
 
 router = APIRouter()
 
@@ -28,7 +31,7 @@ class VehicleInput(BaseModel):
     
 
 @router.post("/predict")
-def predict_price(data: VehicleInput, model_path: Path = Path("ml/models/xgb_model_all.joblib")):
+def predict_price(data: VehicleInput, model_path: Path = MODEL_PATH):
     try:
         df = data.to_frame()
         predictions = predict(df, str(model_path))

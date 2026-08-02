@@ -1,3 +1,5 @@
 import pandas as pd
-df = pd.read_csv("ml/data/80K_Rows.csv")
+from .config import DATA_PATH
+
+df = pd.read_csv(DATA_PATH)
 print(df.columns.tolist())

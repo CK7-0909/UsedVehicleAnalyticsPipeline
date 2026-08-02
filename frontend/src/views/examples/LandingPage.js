@@ -18,6 +18,7 @@ import LandingPageHeader from "components/Headers/LandingPageHeader.js";
 import DefaultFooter from "components/Footers/DefaultFooter.js";
 import ActualVsPredictedChart from "components/Charts/ActualVsPredictedChart";
 import PriceForm from "components/Forms/PriceForm";
+import ChatAssistant from "components/ChatAssistant.jsx";
 
 function LandingPage() {
   const [firstFocus, setFirstFocus] = React.useState(false);
@@ -47,6 +48,13 @@ function LandingPage() {
                   A modern analytics platform that transforms raw vehicle listings into actionable insights.
 Explore market trends, compare pricing patterns, and predict a car’s value instantly using a FastAPI-powered ML model and an end-to-end data pipeline built with Snowflake and dbt.
                 </h5>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="ml-auto mr-auto text-center" md="8">
+                <div style={{ marginTop: 30 }}>
+                  <ChatAssistant />
+                </div>
               </Col>
             </Row>
             <div className="separator separator-primary"></div>

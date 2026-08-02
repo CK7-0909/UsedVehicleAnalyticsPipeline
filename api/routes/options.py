@@ -8,7 +8,8 @@ import pandas as pd
 from fastapi import APIRouter, HTTPException, Query
 
 
-SPEC_DIR = Path("ml/data/vehicle_specs")
+ROOT_DIR = Path(__file__).resolve().parents[2]
+SPEC_DIR = ROOT_DIR / "ml" / "data" / "vehicle_specs"
 MODELS_FILE = SPEC_DIR / "vehicle_models_by_manufacturer.parquet"
 
 router = APIRouter(prefix="/options", tags=["options"])

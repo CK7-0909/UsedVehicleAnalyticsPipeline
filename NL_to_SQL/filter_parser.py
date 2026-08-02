@@ -1,17 +1,25 @@
 """
 Layer 1: Natural language question -> structured filter dict.
 
-Requires ANTHROPIC_API_KEY set in your environment.
+If an Anthropic API key and library are available, this uses Anthropic.
+Otherwise it falls back to a local mock parser so the API can run.
 """
 
+import importlib.util
 import json
+import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from anthropic import Anthropic
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+ANTHROPIC_AVAILABLE = importlib.util.find_spec("anthropic") is not None
 
-client = Anthropic()
+if ANTHROPIC_AVAILABLE and ANTHROPIC_API_KEY:
+    from anthropic import Anthropic
+    client = Anthropic()
+else:
+    client = None
 
 SYSTEM = """Extract search filters from a car-shopping question.
 Return ONLY valid JSON, no other text, no markdown code fences, no ```json``` blocks -- just the raw JSON object starting with {.
@@ -42,7 +50,15 @@ A: {"price_min": null, "price_max": 26000, "year_min": null, "year_max": 2020, "
 """
 
 
+def _fallback_parse_filters(question: str) -> dict:
+    from .mock_parser import parse_filters as _mock_parse_filters
+    return _mock_parse_filters(question)
+
+
 def parse_filters(question: str, max_retries: int = 2) -> dict:
+    if client is None:
+        return _fallback_parse_filters(question)
+
     last_error = None
     for attempt in range(max_retries + 1):
         resp = client.messages.create(

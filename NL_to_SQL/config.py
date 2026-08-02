@@ -1,4 +1,7 @@
-DATA_PATH = "ml/data/80K_Rows.csv" 
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
+DATA_PATH = ROOT_DIR / "ml" / "data" / "80K_Rows.csv"
 PRICE_COL = "price"
 YEAR_COL = "year"
 BODY_TYPE_COL = "type"
