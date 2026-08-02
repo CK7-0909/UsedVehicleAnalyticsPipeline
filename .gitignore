@@ -38,7 +38,7 @@ ml_pipeline/*.csv
 ml_pipeline/*.parquet
 ml_pipeline/__pycache__/
 notebooks/.ipynb_checkpoints/
-80K_Rows.csv
+ml/data/80K_Rows.csv
 
 # --- IDE / OS ---
 .vscode/
