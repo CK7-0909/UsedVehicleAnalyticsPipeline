@@ -6,17 +6,19 @@ import sys
 from dataclasses import asdict
 from pathlib import Path
 
+import pandas as pd
 from dotenv import load_dotenv
 
-from ml.data.snowflake.sf_connection import query_to_df
 from ml.src.evaluate import evaluate_model
 from ml.src.preprocessing import train_model_feature_engineer
 from ml.src.train_model import train_model
 
+LOCAL_DATA_PATH = Path(__file__).resolve().parents[2] / "ml" / "data" / "80K_Rows.csv"
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Train the vehicle price model using Snowflake data."
+        description="Train the vehicle price model using the local ML CSV dataset."
     )
     parser.add_argument(
         "--save-model-path",
@@ -25,7 +27,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--eval-output",
-        default="models/evaluation_all.parquet",
+        default="ml/artifacts/evaluation_all.parquet",
         help="Path for detailed evaluation output (default: %(default)s).",
     )
     parser.add_argument(
@@ -40,9 +42,9 @@ def main() -> int:
     load_dotenv()
     args = parse_args()
 
-    raw_df = query_to_df()
+    raw_df = pd.read_csv(LOCAL_DATA_PATH)
     if raw_df.empty:
-        raise RuntimeError("Snowflake query returned no rows; aborting training.")
+        raise RuntimeError("Local dataset returned no rows; aborting training.")
 
     feature_df = train_model_feature_engineer(raw_df)
     y_pred, y_true = train_model(

@@ -1,11 +1,14 @@
 from fastapi import APIRouter
 import pandas as pd
 import os
+from pathlib import Path
 
 router = APIRouter()
+ROOT_DIR = Path(__file__).resolve().parents[2]
+DEFAULT_EVAL_PATH = ROOT_DIR / "ml" / "artifacts" / "evaluation_all.parquet"
 
 @router.get("/metrics/actual-vs-predicted")
-def graph(file_path: str = "ml/artifacts/evaluation_all.parquet"):
+def graph(file_path: str = str(DEFAULT_EVAL_PATH)):
 
     if not os.path.exists(file_path):
         return {"error": "Evaluation file not found"}
