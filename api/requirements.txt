@@ -20,3 +20,6 @@ SQLAlchemy==1.4.52
 # --- Utilities ---
 requests==2.32.3
 loguru==0.7.2
+# --- RAG support ---
+chromadb==1.5.9
+sentence-transformers==5.6.1
